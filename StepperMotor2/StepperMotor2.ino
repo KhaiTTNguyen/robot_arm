@@ -15,15 +15,12 @@
 
 // Number of steps per internal motor revolution 
 const float STEPS_PER_REVOLUTION = 16; 
-
 //  Amount of Gear Reduction
 const float GEAR_REDUCTION = 1;
-
 // Number of steps per geared output rotation
 const float STEPS_PER_OUT_REV = STEPS_PER_REVOLUTION * GEAR_REDUCTION;
 
 // Define Variables
-
 // Number of Steps Required
 int StepsRequired;
 int StepsRequired2;
@@ -99,7 +96,8 @@ boolean debounceRev2(boolean inLastRev2){
   }
   return inCurrentRev2;
 }
-void garageAction(float factor){
+
+void robotAction(Stepper steppermotor, float factor){
   // Slow - 4-step CW sequence to observe lights on driver board
   
    // Rotate CW 1/2 turn slowly
@@ -108,35 +106,24 @@ void garageAction(float factor){
   steppermotor.step(StepsRequired);
 }
 
-void garageAction2(float factor2){
-  // Slow - 4-step CW sequence to observe lights on driver board
-  
-   // Rotate CW 1/2 turn slowly
-  StepsRequired2  =  STEPS_PER_OUT_REV*factor2; 
-  steppermotor2.setSpeed(1000);   
-  steppermotor2.step(StepsRequired2);
-}
-
 
 void loop()
 {
   current2 = debounce2(last2);
   currentRev2 = debounceRev2(lastRev2);
   if(current2 == HIGH){
-  garageAction2(2);
+    robotAction(steppermotor2, 2);
   }
   if(currentRev2 == HIGH){
-  garageAction2(-2);
+    robotAction(steppermotor2, -2);
   }
   
   current = debounce(last);
   currentRev = debounceRev(lastRev);
   if(current == HIGH){
-  garageAction(2);
+    robotAction(steppermotor, 2);
   }
   if(currentRev == HIGH){
-  garageAction(-2);
+    robotAction(steppermotor, -2);
   }
-
-  
 }
